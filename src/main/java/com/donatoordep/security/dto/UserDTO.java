@@ -1,11 +1,19 @@
 package com.donatoordep.security.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserDTO {
 
     private Long id;
     private String name;
     private String email;
     private String password;
+
+    @JsonIgnore
+    private List<RoleDTO> roles = new ArrayList<>();
 
     public UserDTO() {
     }
@@ -15,6 +23,14 @@ public class UserDTO {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public void addRole(RoleDTO role) {
+        roles.add(role);
+    }
+
+    public List<RoleDTO> getRoles() {
+        return roles;
     }
 
     public Long getId() {

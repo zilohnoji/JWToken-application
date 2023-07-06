@@ -1,6 +1,7 @@
 package com.donatoordep.security.controllers;
 
 import com.donatoordep.security.dto.AuthenticationDTO;
+import com.donatoordep.security.dto.RoleDTO;
 import com.donatoordep.security.dto.TokenAuthenticationSuccesfulDTO;
 import com.donatoordep.security.dto.UserDTO;
 import com.donatoordep.security.services.UserService;

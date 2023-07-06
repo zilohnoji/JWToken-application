@@ -38,6 +38,10 @@ public class User implements UserDetails {
         roles.add(role);
     }
 
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }

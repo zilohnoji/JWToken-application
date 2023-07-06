@@ -36,7 +36,7 @@ public class UserService {
     // Registro de usuário
     public void register(UserDTO dto) {
         User user = mapper.toEntity(dto);
-        dto.getRoles().forEach(roleDTO -> new Role(roleDTO.getId(), roleDTO.getRoleName()));
+        dto.getRoles().forEach(RoleDTO -> user.addRole(new Role(RoleDTO.getId(), RoleDTO.getRoleName())));
         user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
         repository.save(user);
     }

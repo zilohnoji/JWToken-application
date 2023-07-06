@@ -12,7 +12,6 @@ public class UserDTO {
     private String email;
     private String password;
 
-    @JsonIgnore
     private List<RoleDTO> roles = new ArrayList<>();
 
     public UserDTO() {
@@ -25,12 +24,12 @@ public class UserDTO {
         this.password = password;
     }
 
-    public void addRole(RoleDTO role) {
-        roles.add(role);
-    }
-
     public List<RoleDTO> getRoles() {
         return roles;
+    }
+
+    public void setRoles(List<RoleDTO> roles) {
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -64,4 +63,5 @@ public class UserDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

@@ -1,6 +1,5 @@
 package com.donatoordep.security.configs.security;
 
-import com.donatoordep.security.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +16,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
-public class SecurityConfigWeb {
+@EnableWebSecurity // Desabilitando as configurações padrões do Spring Security
+public class WebSecurityConfig {
 
     @Autowired
-    private SecurityFilter securityFilter;
+    private JWTAuthenticationFilter securityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,8 +41,8 @@ public class SecurityConfigWeb {
         // Configurações para sub-diretórios de /user
         http.securityMatcher("/user/**")
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers(HttpMethod.GET, "/user/public").permitAll();
-                    authorize.requestMatchers(HttpMethod.POST, "/user/private").hasRole("ADMIN")
+                    authorize.requestMatchers(HttpMethod.GET, "/user/public/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/user/private/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
                 });
 

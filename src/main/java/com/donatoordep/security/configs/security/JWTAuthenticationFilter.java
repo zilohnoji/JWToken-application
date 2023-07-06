@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.token.Token;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class SecurityFilter extends OncePerRequestFilter {
+public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenJWTService service;
@@ -29,23 +28,19 @@ public class SecurityFilter extends OncePerRequestFilter {
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = recoverToken(request);
-        if (token != null) {
-            String login = service.validateToken(token);
-            UserDetails user = repository.findByEmail(login);
+        if (recoverToken(request) != null) { // Validando e recuperando o token do header
+            String login = service.validateToken(recoverToken(request));
+            UserDetails user = repository.findByEmail(login); // Buscando o usuario que fez a requisição
 
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
         }
         filterChain.doFilter(request, response);
     }
 
-    // Método para recuperar o token JWT do cabeçalho
+    // Recuperar o token JWT do cabeçalho da requisição
     private String recoverToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (!(authHeader == null)) {
-            return authHeader.replace("Bearer ", "");
-        }
-        return null;
+        return (request.getHeader("Authorization") != null)
+                ? request.getHeader("Authorization").split(" ")[1] : null;
     }
 }
